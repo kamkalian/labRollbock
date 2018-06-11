@@ -24,6 +24,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_K
 bool high;
 bool runStepper;
 int i = 64;
+int ledPosition = 0;
 
 void setup() {
 
@@ -83,7 +84,32 @@ void loop() {
   
   i--;
   if(i<14)i=14;
-  delay(50);
+  delay(100);
+
+  runLEDRing();
+  
+}
+
+void runLEDRing(){
+
+  for(int i=0;i<NUMPIXELS;i++){
+
+    if(ledPosition==i) {
+
+      pixels.setPixelColor(i, pixels.Color(0,0,255));
+              
+    }else{
+      
+      pixels.setPixelColor(i, pixels.Color(0,0,0));
+      
+    }
+
+    pixels.show(); // This sends the updated pixel color to the hardware.
+
+  }
+
+  ledPosition++;
+  if(ledPosition>=NUMPIXELS) ledPosition = 0;
   
 }
 
