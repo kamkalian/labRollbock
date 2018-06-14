@@ -9,7 +9,10 @@
 #define LED_PIN      2
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-
+/*
+ * Button Pin
+ */
+#define btn_Pin 7
 
 /*
  * Pins für den Steppermotor definieren
@@ -25,8 +28,14 @@ bool high;
 bool runStepper;
 int i = 64;
 int ledPosition = 0;
+int btnVal = 0;
 
 void setup() {
+
+  /*
+   * Button Pin einrichten
+   */
+   pinMode(btn_Pin,INPUT_PULLUP);
 
   /*
    * Pins für den Motor setzen
@@ -86,7 +95,11 @@ void loop() {
   if(i<14)i=14;
   delay(100);
 
-  runLEDRing();
+  btnVal = digitalRead(btn_Pin);
+  if(!btnVal) runLEDRing();
+
+
+  
   
 }
 
