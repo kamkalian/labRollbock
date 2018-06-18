@@ -6,7 +6,7 @@
  * LED Ring definieren
  */
 #define NUMPIXELS   12
-#define LED_PIN      2
+#define LED_PIN      6
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 /*
@@ -22,6 +22,11 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_K
 #define STEP_PIN  4 //step
 
 /*
+ * Pins für Reflexlichtschranke
+ */
+ #define REFLEX_PIN   6
+
+/*
  * Variabeln
  */
 bool high;
@@ -29,17 +34,27 @@ bool runStepper;
 int i = 64;
 int ledPosition = 0;
 int btnVal = 0;
+int rotation = 0;
 
 bool btnLastState = false;
 bool btnLock = false;
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 bool blinky = false;
-bool error = true;
+bool error = false;
 
 void setup() {
 
+  /*
+   * Helligkeit einstellen
+   */
   pixels.setBrightness(100);
+
+  /*
+   * Reflexlichtschranke einrichten
+   */
+   pinMode(REFLEX_PIN, INPUT_PULLUP);
+   attachInterrupt(digitalPinToInterrupt(REFLEX_PIN), checkRotate, CHANGE);
 
   /*
    * Button Pin einrichten
@@ -101,10 +116,6 @@ void setup() {
 }
 
 void loop() {
-  
-  i--;
-  if(i<14)i=14;
-  delay(100);
 
   btnVal = digitalRead(btn_Pin);
   
@@ -120,6 +131,7 @@ void loop() {
       if(error) {
 
         error = false;
+        i = 64;
         
       }else {
         
@@ -133,9 +145,27 @@ void loop() {
     }
   }
 
+  delay(100);
+
+  /*
+   * Prüfen wieviele Umdrehungen erreicht wurden
+   */
+   if(runStepper && rotation<2 && i==14) {
+    
+    error = true;
+    rotation = 0;
+   
+   }
+
   if(!error){
     
-    if(runStepper) runLEDRing();
+    if(runStepper){
+      
+      runLEDRing();
+      i--;
+      if(i<14)i=14;
+  
+    }
     else readyLight();
 
   }else {
@@ -231,3 +261,10 @@ ISR(TIMER1_COMPA_vect){
   }
   
 }
+
+void checkRotate(){
+
+  rotation++;
+  
+}
+
