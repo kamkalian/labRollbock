@@ -34,8 +34,12 @@ bool btnLastState = false;
 bool btnLock = false;
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+bool blinky = false;
+bool error = true;
 
 void setup() {
+
+  pixels.setBrightness(100);
 
   /*
    * Button Pin einrichten
@@ -89,8 +93,10 @@ void setup() {
     delay(150); // Delay for a period of time (in milliseconds).
 
   }
+  
 
   runStepper = false;
+  readyLight();
 
 }
 
@@ -108,18 +114,41 @@ void loop() {
   }
 
   if ((millis() - lastDebounceTime) > debounceDelay) {
+    
     if(!btnVal && !btnLock) {
-      if(runStepper) runStepper = false;
-      else runStepper = true;
+      
+      if(error) {
+
+        error = false;
+        
+      }else {
+        
+        if(runStepper) runStepper = false;
+        else runStepper = true;
+
+      }
+      
       btnLock = true;
+      
     }
   }
-  
-  if(runStepper) runLEDRing();
+
+  if(!error){
+    
+    if(runStepper) runLEDRing();
+    else readyLight();
+
+  }else {
+
+    runStepper = false;
+    errorLight();
+    
+  }
 
   btnLastState = btnVal;
   
 }
+
 
 void runLEDRing(){
 
@@ -141,6 +170,40 @@ void runLEDRing(){
 
   ledPosition++;
   if(ledPosition>=NUMPIXELS) ledPosition = 0;
+  
+}
+
+
+void readyLight(){
+
+  for(int i=0;i<NUMPIXELS;i++){
+
+    if(ledPosition==i) {
+      
+      pixels.setPixelColor(i, pixels.Color(0,255,0));
+      
+    }
+    
+  }
+  pixels.show(); // This sends the updated pixel color to the hardware.
+
+  ledPosition++;
+  if(ledPosition>=NUMPIXELS) ledPosition = 0;
+  
+}
+
+
+void errorLight(){
+
+  for(int i=0;i<NUMPIXELS;i++){
+
+    if(blinky) pixels.setPixelColor(i, pixels.Color(255,0,0));
+    else pixels.setPixelColor(i, pixels.Color(0,0,0));
+    
+  }
+  pixels.show(); // This sends the updated pixel color to the hardware.
+
+  blinky = !blinky; //toggle blinky
   
 }
 
