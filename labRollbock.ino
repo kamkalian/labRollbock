@@ -30,6 +30,11 @@ int i = 64;
 int ledPosition = 0;
 int btnVal = 0;
 
+bool btnLastState = false;
+bool btnLock = false;
+unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+
 void setup() {
 
   /*
@@ -96,13 +101,23 @@ void loop() {
   delay(100);
 
   btnVal = digitalRead(btn_Pin);
-  if(!btnVal) {
-    if(runStepper) runStepper = false;
-    else runStepper = true;
+  
+  if(btnVal != btnLastState){
+    lastDebounceTime = millis();
+    btnLock = false;
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if(!btnVal && !btnLock) {
+      if(runStepper) runStepper = false;
+      else runStepper = true;
+      btnLock = true;
+    }
   }
   
   if(runStepper) runLEDRing();
 
+  btnLastState = btnVal;
   
 }
 
