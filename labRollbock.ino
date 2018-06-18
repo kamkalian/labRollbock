@@ -85,7 +85,7 @@ void setup() {
 
   }
 
-  runStepper = true;
+  runStepper = false;
 
 }
 
@@ -96,10 +96,13 @@ void loop() {
   delay(100);
 
   btnVal = digitalRead(btn_Pin);
-  if(!btnVal) runLEDRing();
-
-
+  if(!btnVal) {
+    if(runStepper) runStepper = false;
+    else runStepper = true;
+  }
   
+  if(runStepper) runLEDRing();
+
   
 }
 
