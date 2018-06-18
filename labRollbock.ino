@@ -149,7 +149,6 @@ void loop() {
   
 }
 
-
 void runLEDRing(){
 
   for(int i=0;i<NUMPIXELS;i++){
@@ -168,8 +167,7 @@ void runLEDRing(){
 
   }
 
-  ledPosition++;
-  if(ledPosition>=NUMPIXELS) ledPosition = 0;
+  nextPosition();
   
 }
 
@@ -187,8 +185,7 @@ void readyLight(){
   }
   pixels.show(); // This sends the updated pixel color to the hardware.
 
-  ledPosition++;
-  if(ledPosition>=NUMPIXELS) ledPosition = 0;
+  nextPosition();
   
 }
 
@@ -207,6 +204,12 @@ void errorLight(){
   
 }
 
+void nextPosition(){
+
+  ledPosition++;
+  if(ledPosition>=NUMPIXELS) ledPosition = 0;
+  
+}
 
 /*
  * Timer1 Overflow Routine
