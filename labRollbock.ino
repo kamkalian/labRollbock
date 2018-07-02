@@ -17,14 +17,14 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_K
 /*
  * Pins für den Steppermotor definieren
  */
-#define EN_PIN    2 //enable (CFG6)
+#define EN_PIN    5 //enable (CFG6)
 #define DIR_PIN   3 //direction
 #define STEP_PIN  4 //step
 
 /*
  * Pins für Reflexlichtschranke
  */
- #define REFLEX_PIN   6
+ #define REFLEX_PIN   2
 
 /*
  * Variabeln
@@ -54,7 +54,8 @@ void setup() {
    * Reflexlichtschranke einrichten
    */
    pinMode(REFLEX_PIN, INPUT_PULLUP);
-   attachInterrupt(digitalPinToInterrupt(REFLEX_PIN), checkRotate, CHANGE);
+   //pinMode(REFLEX_PIN, INPUT);
+   attachInterrupt(digitalPinToInterrupt(REFLEX_PIN), checkRotate, RISING);
 
   /*
    * Button Pin einrichten
@@ -118,6 +119,9 @@ void setup() {
 void loop() {
 
   btnVal = digitalRead(btn_Pin);
+
+  int val = digitalRead(REFLEX_PIN);
+  if(val == HIGH) error = true;
   
   if(btnVal != btnLastState){
     lastDebounceTime = millis();
@@ -150,12 +154,14 @@ void loop() {
   /*
    * Prüfen wieviele Umdrehungen erreicht wurden
    */
+   
    if(runStepper && rotation<2 && i==14) {
     
     error = true;
     rotation = 0;
    
    }
+   
 
   if(!error){
     
@@ -265,6 +271,7 @@ ISR(TIMER1_COMPA_vect){
 void checkRotate(){
 
   rotation++;
+  runStepper = true;
   
 }
 
