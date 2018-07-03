@@ -26,6 +26,8 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_K
  */
  #define REFLEX_PIN   2
 
+ #define DEBUG  0
+
 /*
  * Variabeln
  */
@@ -44,6 +46,8 @@ bool blinky = false;
 bool error = false;
 
 void setup() {
+
+  if(DEBUG) Serial.begin(9600);
 
   /*
    * Helligkeit einstellen
@@ -119,9 +123,6 @@ void setup() {
 void loop() {
 
   btnVal = digitalRead(btn_Pin);
-
-  int val = digitalRead(REFLEX_PIN);
-  if(val == HIGH) error = true;
   
   if(btnVal != btnLastState){
     lastDebounceTime = millis();
@@ -154,11 +155,10 @@ void loop() {
   /*
    * Prüfen wieviele Umdrehungen erreicht wurden
    */
-   
-   if(runStepper && rotation<2 && i==14) {
+   if(DEBUG) Serial.println(rotation);
+   if(runStepper && rotation==0 && i==14) {
     
     error = true;
-    rotation = 0;
    
    }
    
@@ -182,7 +182,7 @@ void loop() {
   }
 
   btnLastState = btnVal;
-  
+  rotation = 0;
 }
 
 void runLEDRing(){
@@ -271,7 +271,7 @@ ISR(TIMER1_COMPA_vect){
 void checkRotate(){
 
   rotation++;
-  runStepper = true;
+  
   
 }
 
