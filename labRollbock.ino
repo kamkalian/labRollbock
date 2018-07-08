@@ -26,7 +26,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LED_PIN, NEO_GRB + NEO_K
  */
  #define REFLEX_PIN   2
 
- #define DEBUG  0
+ #define DEBUG  1
 
 /*
  * Variabeln
@@ -36,7 +36,7 @@ bool runStepper;
 int i = 64;
 int ledPosition = 0;
 int btnVal = 0;
-int rotation = 0;
+unsigned long lastRotationTime = 0;
 
 bool btnLastState = false;
 bool btnLock = false;
@@ -44,6 +44,7 @@ unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 bool blinky = false;
 bool error = false;
+int errorCounter = 0;
 
 void setup() {
 
@@ -142,6 +143,7 @@ void loop() {
         
         if(runStepper) runStepper = false;
         else runStepper = true;
+        errorCounter = 0;
 
       }
       
@@ -155,11 +157,18 @@ void loop() {
   /*
    * Prüfen wieviele Umdrehungen erreicht wurden
    */
-   if(DEBUG) Serial.println(rotation);
-   if(runStepper && rotation==0 && i==14) {
-    
-    error = true;
+   if(DEBUG) {
+    Serial.print(millis() - lastRotationTime);
+    Serial.print(" ");
+    Serial.println(errorCounter);
+   }
    
+   if(runStepper && (millis() - lastRotationTime) > 100 && i==14) errorCounter++;
+   if(errorCounter>5) {
+
+    errorCounter = 0;
+    error = true;
+    
    }
    
 
@@ -182,7 +191,7 @@ void loop() {
   }
 
   btnLastState = btnVal;
-  rotation = 0;
+  lastRotationTime = 0;
 }
 
 void runLEDRing(){
@@ -270,7 +279,7 @@ ISR(TIMER1_COMPA_vect){
 
 void checkRotate(){
 
-  rotation++;
+  lastRotationTime = millis();
   
   
 }
