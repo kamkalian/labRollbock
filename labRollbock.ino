@@ -60,7 +60,7 @@ void setup() {
    */
    pinMode(REFLEX_PIN, INPUT_PULLUP);
    //pinMode(REFLEX_PIN, INPUT);
-   attachInterrupt(digitalPinToInterrupt(REFLEX_PIN), checkRotate, RISING);
+   attachInterrupt(digitalPinToInterrupt(REFLEX_PIN), checkRotate, CHANGE);
 
   /*
    * Button Pin einrichten
@@ -164,7 +164,7 @@ void loop() {
    }
    
    if(runStepper && (millis() - lastRotationTime) > 100 && i==14) errorCounter++;
-   if(errorCounter>5) {
+   if(errorCounter>3) {
 
     errorCounter = 0;
     error = true;
@@ -191,7 +191,7 @@ void loop() {
   }
 
   btnLastState = btnVal;
-  lastRotationTime = 0;
+  //lastRotationTime = 0;
 }
 
 void runLEDRing(){
