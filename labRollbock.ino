@@ -144,6 +144,7 @@ void loop() {
         if(runStepper) runStepper = false;
         else runStepper = true;
         errorCounter = 0;
+        i = 64;
 
       }
       
