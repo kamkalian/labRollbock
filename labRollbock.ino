@@ -45,6 +45,7 @@ unsigned long debounceDelay = 50;    // the debounce time; increase if the outpu
 bool blinky = false;
 bool error = false;
 int errorCounter = 0;
+int errorCounterReset = 0;
 
 void setup() {
 
@@ -164,12 +165,22 @@ void loop() {
     Serial.println(errorCounter);
    }
    
-   if(runStepper && (millis() - lastRotationTime) > 100 && i==14) errorCounter++;
+   if(runStepper && (millis() - lastRotationTime) > 100 && i==14) {
+      errorCounter++;
+   }else{
+      errorCounterReset++;
+   }
+   
    if(errorCounter>5) {
 
     errorCounter = 0;
     error = true;
     
+   }
+
+   if(errorCounterReset >= 10) {
+      errorCounter--;
+      errorCounterReset = 0;
    }
    
 
