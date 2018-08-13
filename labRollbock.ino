@@ -183,7 +183,7 @@ void loop() {
       errorResetCounter = 0;
    }
 
-   if(errorResetCounter <0) errorResetCounter = 0;
+   if(errorCounter <0) errorCounter = 0;
    
 
   if(!error){
