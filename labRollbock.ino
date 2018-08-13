@@ -202,6 +202,7 @@ void runLEDRing(){
     if(ledPosition==i) {
 
       pixels.setPixelColor(i, pixels.Color(0,0,255));
+      if(errorCounter>i) pixels.setPixelColor(i, pixels.Color(255,0,0));
               
     }else{
       
