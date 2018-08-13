@@ -6,7 +6,7 @@ The labRollbock is a Tool to roll cans.
 In the can we solve some raw materials for oure test in the lab.
 
 ### Arduino
-In the labRollbock wie use a Arduino Nano. The power comes from a buckconverter.
+In the labRollbock we use a Arduino Nano. The power comes from a buckconverter.
 
 ---
 
