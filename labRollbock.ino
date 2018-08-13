@@ -45,7 +45,7 @@ unsigned long debounceDelay = 50;    // the debounce time; increase if the outpu
 bool blinky = false;
 bool error = false;
 int errorCounter = 0;
-int errorCounterReset = 0;
+int errorResetCounter = 0;
 
 void setup() {
 
@@ -168,7 +168,7 @@ void loop() {
    if(runStepper && (millis() - lastRotationTime) > 100 && i==14) {
       errorCounter++;
    }else{
-      errorCounterReset++;
+      errorResetCounter++;
    }
    
    if(errorCounter>5) {
@@ -178,10 +178,12 @@ void loop() {
     
    }
 
-   if(errorCounterReset >= 10) {
+   if(errorResetCounter >= 100) {
       errorCounter--;
-      errorCounterReset = 0;
+      errorResetCounter = 0;
    }
+
+   if(errorResetCounter <0) errorResetCounter = 0;
    
 
   if(!error){
