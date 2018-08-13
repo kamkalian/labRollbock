@@ -165,7 +165,7 @@ void loop() {
    }
    
    if(runStepper && (millis() - lastRotationTime) > 100 && i==14) errorCounter++;
-   if(errorCounter>3) {
+   if(errorCounter>5) {
 
     errorCounter = 0;
     error = true;
@@ -202,9 +202,8 @@ void runLEDRing(){
     if(ledPosition==i) {
 
       pixels.setPixelColor(i, pixels.Color(0,0,255));
-      if(errorCounter>i) pixels.setPixelColor(i, pixels.Color(255,0,0));
               
-    }else{
+    }else if(i>=errorCounter){
       
       pixels.setPixelColor(i, pixels.Color(0,0,0));
       
@@ -212,6 +211,12 @@ void runLEDRing(){
 
     pixels.show(); // This sends the updated pixel color to the hardware.
 
+  }
+
+  for(int i=0;i<errorCounter;i++){
+
+    pixels.setPixelColor(i, pixels.Color(255,0,0));
+    
   }
 
   nextPosition();
