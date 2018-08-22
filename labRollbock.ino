@@ -121,16 +121,88 @@ void setup() {
 
   pixels.begin(); // This initializes the NeoPixel library.
 
+  /*
+   * Siegwerk Logo anzeigen
+   */
 
-  for(int led=0;led<NUMPIXELS;led++){
-    
-      ledRing[led][0]=0;
-      ledRing[led][1]=0;
-      ledRing[led][2]=255;
-      delay(100);
-      refreshLedRing();
- 
-  }
+  /*grün*/
+  ledRing[5][0]=0;
+  ledRing[5][1]=200;
+  ledRing[5][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  ledRing[6][0]=0;
+  ledRing[6][1]=200;
+  ledRing[6][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  /*blau*/
+  ledRing[7][0]=0;
+  ledRing[7][1]=0;
+  ledRing[7][2]=255;
+  refreshLedRing();
+  delay(200);
+
+  ledRing[8][0]=0;
+  ledRing[8][1]=0;
+  ledRing[8][2]=255;
+  refreshLedRing();
+  delay(200);
+
+  /*violett*/
+  ledRing[9][0]=100;
+  ledRing[9][1]=0;
+  ledRing[9][2]=100;
+  refreshLedRing();
+  delay(200);
+
+  ledRing[10][0]=255;
+  ledRing[10][1]=0;
+  ledRing[10][2]=255;
+  refreshLedRing();
+  delay(200);
+
+  /*rot*/
+  ledRing[11][0]=255;
+  ledRing[11][1]=0;
+  ledRing[11][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  ledRing[0][0]=255;
+  ledRing[0][1]=0;
+  ledRing[0][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  /*orange*/
+  ledRing[1][0]=255;
+  ledRing[1][1]=100;
+  ledRing[1][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  ledRing[2][0]=255;
+  ledRing[2][1]=100;
+  ledRing[2][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  /*gelb*/
+  ledRing[3][0]=255;
+  ledRing[3][1]=255;
+  ledRing[3][2]=0;
+  refreshLedRing();
+  delay(200);
+
+  ledRing[4][0]=255;
+  ledRing[4][1]=255;
+  ledRing[4][2]=0;
+  refreshLedRing(); 
+  delay(1000);
+
 
   runStepper = false;
   readyLight();
@@ -401,7 +473,7 @@ ISR(TIMER1_COMPA_vect){
 ISR(WDT_vect){
   
   btnVal = digitalRead(btn_Pin);
-  if(!btnVal) {
+  if(!btnVal && !runStepper) {
     standby = false;
     standbyCounter = 0;
     standbyLED = 0;
